@@ -27,15 +27,11 @@ module Middleman
 
       def emojify(content)
         content.to_str.gsub(/:([\w+-]+):/) do |match|
-          emoji = Emoji.find_by_alias($1)
-          if emoji
-            image = []
-            image << %(alt="#{$1}")
-            image << src(emoji.image_filename)
-            image << size if size
-            image << style if style
-
-            %(<img class="gemoji" #{image.join(' ').strip} />)
+          if (emoji = Emoji.find_by_alias(Regexp.last_match[1]))
+            %(<g-emoji alias="#{Regexp.last_match[1]}" ) + \
+              %(fallback-src="#{fallback_src(emoji.image_filename)}") + \
+              fallback_img_size + \
+              %(ios-version="6.0">#{emoji.raw}</g-emoji>)
           else
             match
           end
@@ -54,12 +50,12 @@ module Middleman
         !(/<body.+?>.+?<\/body>/m =~ content.to_str).nil?
       end
 
-      def src(path)
-        %(src="#{File.join(@base_path, path)}")
+      def fallback_src(path)
+        %(fallback-src=#{File.join(@base_path, path)})
       end
 
-      def size
-        %(width="#{@options[:size]}" height="#{@options[:size]}") if @options[:size]
+      def fallback_img_size
+        @options[:size] ? %(fallback-img-size width="#{@options[:size]}" height="#{@options[:size]}") : ''
       end
 
       def style

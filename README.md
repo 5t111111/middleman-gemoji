@@ -46,6 +46,8 @@ Or with options:
 activate :gemoji, :size => 20, :style => "vertical-align: middlele", :emoji_dir => "images/emoji"
 ```
 
+Note that these options have effect only when fallback images are displayed instead of raw emoji characters.
+
 Then you can use emoji in your template.
 
 ## Contributing
