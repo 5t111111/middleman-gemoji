@@ -29,8 +29,8 @@ module Middleman
         content.to_str.gsub(/:([\w+-]+):/) do |match|
           if (emoji = Emoji.find_by_alias(Regexp.last_match[1]))
             %(<g-emoji alias="#{Regexp.last_match[1]}" ) + \
-              fallback_src(emoji.image_filename) + \
-              fallback_img_size + \
+              fallback_src(emoji.image_filename) + ' ' + \
+              fallback_img_size + ' ' + \
               %(ios-version="6.0">#{emoji.raw}</g-emoji>)
           else
             match
